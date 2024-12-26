@@ -17,11 +17,14 @@ class Trigger {
 
   async init() {
     try {
-      this.params = await interpreter(
+      const interpreterOptions = {};
+      if (this.runtime.config?.interpreter_max_size) {
+        interpreterOptions.maxSize = this.runtime.config.interpreter_max_size;
+      }
+      this.params = await interpreter.interpret(
         this.params,
         this.chain.values(),
-        undefined,
-        this.runtime.config?.interpreter_max_size,
+        interpreterOptions,
         this.runtime.config?.global_values
       );
       // SERVER:
@@ -103,11 +106,14 @@ class Trigger {
 
   async getParamValues() {
     try {
-      const values = await interpreter(
+      const interpreterOptions = {};
+      if (this.runtime.config?.interpreter_max_size) {
+        interpreterOptions.maxSize = this.runtime.config.interpreter_max_size;
+      }
+      const values = await interpreter.interpret(
         this.params,
         this.chain.values(),
-        undefined,
-        this.runtime.config?.interpreter_max_size,
+        interpreterOptions,
         this.runtime.config?.global_values
       );
       return values;

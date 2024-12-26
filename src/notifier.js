@@ -59,11 +59,14 @@ class Notifier {
     Object.assign(notifValues, this.config);
     delete notifValues.config;
     try {
-      const _values = await interpreter(
+      const interpreterOptions = {};
+      if (this.runtime.config?.interpreter_max_size) {
+        interpreterOptions.maxSize = this.runtime.config.interpreter_max_size;
+      }
+      const _values = await interpreter.interpret(
         notifValues,
         values,
-        undefined,
-        this.runtime.config?.interpreter_max_size,
+        interpreterOptions,
         this.runtime.config?.global_values
       );
       return _values;

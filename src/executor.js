@@ -219,12 +219,12 @@ class Executor {
     const useProcessValues = options.useProcessValues || false;
     const useExtraValue = options.useExtraValue || false;
 
-    const _options = {
+    const interpreterOptions = {
       ignoreGlobalValues: !useGlobalValues
     };
 
     if (options.altValueReplace) {
-      _options.altValueReplace = options.altValueReplace;
+      interpreterOptions.altValueReplace = options.altValueReplace;
     }
 
     const replacerValues = {};
@@ -238,11 +238,13 @@ class Executor {
     }
 
     try {
-      const replacedValues = await interpreter(
+      if (this.runtime.config?.interpreter_max_size) {
+        interpreterOptions.maxSize = this.runtime.config.interpreter_max_size;
+      }
+      const replacedValues = await interpreter.interpret(
         input,
         replacerValues,
-        _options,
-        this.runtime.config?.interpreter_max_size,
+        interpreterOptions,
         this.runtime.config?.global_values
       );
       return replacedValues;
@@ -266,14 +268,17 @@ class Executor {
       if (this.process.exec.type && configValues.type) {
         values.type = configValues.type;
       }
-      const repacedValues = await interpreter(
+      const interpreterOptions = {};
+      if (this.runtime.config?.interpreter_max_size) {
+        interpreterOptions.maxSize = this.runtime.config.interpreter_max_size;
+      }
+      const replacedValues = await interpreter.interpret(
         values,
         this.process.values(),
-        undefined,
-        this.runtime.config?.interpreter_max_size,
+        interpreterOptions,
         this.runtime.config?.global_values
       );
-      return repacedValues;
+      return replacedValues;
     } catch (err) {
       this.logger.log('error', 'Execution - Method getValues / loadExecutorConfig:', err);
       this.process.err_output = 'Execution - Method getValues / loadExecutorConfig:' + err;
@@ -285,11 +290,14 @@ class Executor {
 
   async getParamValues() {
     try {
-      const res = await interpreter(
+      const interpreterOptions = {};
+      if (this.runtime.config?.interpreter_max_size) {
+        interpreterOptions.maxSize = this.runtime.config.interpreter_max_size;
+      }
+      const res = await interpreter.interpret(
         this.process.exec,
         this.process.values(),
-        undefined,
-        this.runtime.config?.interpreter_max_size,
+        interpreterOptions,
         this.runtime.config?.global_values
       );
       return res;
@@ -305,11 +313,14 @@ class Executor {
   async getConfigValues() {
     try {
       const configValues = await this.chain.loadExecutorConfig();
-      const replacedValues = await interpreter(
+      const interpreterOptions = {};
+      if (this.runtime.config?.interpreter_max_size) {
+        interpreterOptions.maxSize = this.runtime.config.interpreter_max_size;
+      }
+      const replacedValues = await interpreter.interpret(
         configValues,
         this.process.values(),
-        undefined,
-        this.runtime.config?.interpreter_max_size,
+        interpreterOptions,
         this.runtime.config?.global_values
       );
       return replacedValues;
@@ -456,11 +467,14 @@ class Executor {
       valueOriginal = condition[item];
     }
 
-    const value = await interpreter(
+    const interpreterOptions = {};
+    if (this.runtime.config?.interpreter_max_size) {
+      interpreterOptions.maxSize = this.runtime.config.interpreter_max_size;
+    }
+    const value = await interpreter.interpret(
       valueOriginal,
       undefined,
-      undefined,
-      this.runtime.config?.interpreter_max_size,
+      interpreterOptions,
       this.runtime.config?.global_values
     );
 

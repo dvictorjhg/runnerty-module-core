@@ -1,6 +1,6 @@
 {
   "name": "@runnerty/module-core",
-  "version": "3.1.2",
+  "version": "4.0.0",
   "description": "Runnerty module core classes",
   "author": "Runnerty Tech",
   "license": "MIT",
@@ -27,15 +27,15 @@
   },
   "homepage": "https://github.com/runnerty/module-core#readme",
   "dependencies": {
-    "@runnerty/interpreter-core": "~3.1.2",
+    "@runnerty/interpreter-core": "^4.0.0",
     "json-stringify-safe": "~5.0.1",
     "lodash": "~4.17.21",
     "millisecond": "~0.1.2"
   },
   "devDependencies": {
-    "eslint": "^9.11.1",
+    "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
-    "prettier": "^3.3.3"
+    "prettier": "^3.4.2"
   }
 }
